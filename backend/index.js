@@ -60,30 +60,81 @@ const main = async () => {
             })
         })
 
+        //add new school
+        app.post('/school', async(req,res)=>{
+            //uid
+            const today = new Date();
+            const uid = 'SID'+today.getFullYear()+''+(today.getMonth()+1)+''+today.getDate()+''+today.getHours() + "" + today.getMinutes() + "" + today.getSeconds();
 
-        //UserData, Use Role
-        app.put('/usersdata', async (req, res) => {
-            const userinfo = req.body
-            let result;
-            if (userinfo.type) {
-                const filter = { email: userinfo.email }
-                const updateRole = {
-                    $set: {
-                        role: 'admin'
-                    }
-                };
-                result = await usersDataCollection.updateOne(filter, updateRole);
+            //get data from client side
+            const clientData = req.body;
+            
+            //sql script
+            let sql = `INSERT INTO school (code, create_on, updated_on, name, about, phone, email, address, logo) VALUES ('${uid}', NOW(), NOW(), '${clientData.name}', '${clientData.about}', '${clientData.phone}', '${clientData.email}', '${clientData.address}', '${clientData.logo}')`;
 
-            } else {
-                const filter = { email: userinfo.email }
-                const options = { upsert: true };
-                const userDoc = {
-                    $set: userinfo
-                };
-                result = await usersDataCollection.updateOne(filter, userDoc, options);
-            }
-            res.send(result)
+            db.query(sql, (err, result)=>{
+                if(err){
+                    console.log(err)
+                }
+                res.send(result)
+            })
         })
+
+        //get all schools
+        app.get('/school', async(req,res)=>{
+                        
+            //sql script
+            let sql = `SELECT * FROM school WHERE delete_on IS NULL`;
+
+            db.query(sql, (err, result)=>{
+                if(err){
+                    console.log(err)
+                }
+                res.send(result)
+            })
+        })
+
+        //update school info
+        app.put('/school/:uid', async(req,res)=>{
+                        
+            //sql script
+            let sql = `UPDATE school SET name = '${req.body.name}', updated_on = NOW() WHERE code = '${req.params.uid}'`;
+
+            db.query(sql, (err, result)=>{
+                if(err){
+                    console.log(err)
+                }
+                res.send(result)
+            })
+        })
+
+        //fake delete school info
+        app.put('/deleteschool/:uid', async(req,res)=>{
+                        
+            //sql script
+            let sql = `UPDATE school SET delete_on = NOW() WHERE code = '${req.params.uid}'`;
+
+            db.query(sql, (err, result)=>{
+                if(err){
+                    console.log(err)
+                }
+                res.send(result)
+            })
+        })
+
+        //delete school
+        app.delete('/school/:uid', async(req,res)=>{
+
+            let sql = `DELETE FROM school WHERE code = '${req.params.uid}'`;
+
+            db.query(sql, (err, result)=>{
+                if(err){
+                    console.log(err)
+                }
+                res.send(result)
+            })
+        })
+        
     }
 
     finally {
