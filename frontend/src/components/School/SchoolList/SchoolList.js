@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Button, Spinner, Table } from 'react-bootstrap';
+import { Link, NavLink } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 const SchoolList = () => {
@@ -81,7 +82,11 @@ const SchoolList = () => {
                                     <td>
                                         <img src={school.logo} width='100'/>
                                     </td>
-                                    <td><Button variant='warning' className="m-2">Edit</Button> <Button variant='danger' onClick={()=>deleteSchool(school.code)} className="m-2">Delete</Button></td>
+                                    <td>
+                                    <NavLink to={`/editschool/${school.code}`} className="">Edit</NavLink>
+                                    
+                                        <Button variant='danger' onClick={()=>deleteSchool(school.code)} className="m-2">Delete</Button></td>
+                                   
                                 </tr>
                             })
                     }

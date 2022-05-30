@@ -94,11 +94,25 @@ const main = async () => {
             })
         })
 
-        //update school info
-        app.put('/school/:uid', async(req,res)=>{
+        //get all schools
+        app.get('/getoneschool/:uid', async(req,res)=>{
                         
             //sql script
-            let sql = `UPDATE school SET name = '${req.body.name}', updated_on = NOW() WHERE code = '${req.params.uid}'`;
+            let sql = `SELECT * FROM school WHERE code = '${req.params.uid}'`;
+
+            db.query(sql, (err, result)=>{
+                if(err){
+                    console.log(err)
+                }
+                res.send(result)
+            })
+        })
+
+        //update school info
+        app.put('/school/:uid', async(req,res)=>{
+
+            //sql script
+            let sql = `UPDATE school SET name = '${req.body.name}', about = '${req.body.about}', phone = '${req.body.phone}', email = '${req.body.email}', address = '${req.body.address}', updated_on = NOW() WHERE code = '${req.params.uid}'`;
 
             db.query(sql, (err, result)=>{
                 if(err){

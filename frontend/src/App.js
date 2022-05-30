@@ -6,6 +6,7 @@ import { Button, Col, Container, Form, ListGroup, Row } from 'react-bootstrap';
 import NewSchool from './components/School/NewSchool/NewSchool';
 import Home from './components/Home/Home';
 import SchoolList from './components/School/SchoolList/SchoolList';
+import EditSchool from './components/School/EditSchool/EditSchool';
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="newschool" element={<NewSchool />} />
               <Route path="schoollist" element={<SchoolList/>} />
+              <Route path="editschool/:schoolid" element={<EditSchool/>} />
             </Routes>
             
           </Col>
