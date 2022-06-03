@@ -46,14 +46,14 @@ const SchoolList = () => {
                     <tr>
                         <th>#</th>
                         <th>Code</th>
-                        <th>create_on</th>
-                        <th>updated_on</th>
-                        <th>name</th>
-                        <th>about</th>
-                        <th>phone</th>
-                        <th>email</th>
-                        <th>address</th>
-                        <th>logo</th>
+                        <th>Create On</th>
+                        <th>Last Updated</th>
+                        <th>Name</th>
+                        <th>About</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Address</th>
+                        <th>Logo</th>
                         <th>Action</th>
                     </tr>
                 </thead>
