@@ -1,19 +1,18 @@
 # Installation Node-React-Mysql
 ```
-# Install dependencies for server
+# Install dependencies for frontend
+cd frontend
 npm install
 
-# Install dependencies for client
-npm run client-install
+# Install dependencies for backend
+cd backend
+npm install
 
-# Run the client & server with concurrently
-npm run dev
+# Run frontend
+npm start
 
-# Run the Express server only
-npm run server
+# Run backend
+npm run start-dev
 
-# Run the React client only
-npm run client
-
-# Server runs on http://localhost:5000 and client on http://localhost:3000
+# frontend runs on http://localhost:3000 and backend on http://localhost:5000
 ```
