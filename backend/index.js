@@ -1,10 +1,14 @@
-const express = require('express');
-const mysql = require('mysql');
-const cors = require('cors');
-require('dotenv').config();
+import express from 'express';
+import { db } from './dbservice.js';
+import { addNewData } from './CrudProcess/addData.js';
+import { getAllData } from './CrudProcess/getAllData.js';
+import { editData } from './CrudProcess/editData.js';
+import { deleteData } from './CrudProcess/deleteData.js';
+
+import cors from 'cors';
+import dotenv from 'dotenv';
+dotenv.config();
 const app = express();
-
-
 const port = process.env.PORT || 5000;
 
 
@@ -12,35 +16,29 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-//mysql Connection
-const db = mysql.createConnection({
-    host:`${process.env.MYSQL_HOST}`,
-    user:`${process.env.MYSQ_USER}`,
-    password:`${process.env.MYSQ_PASSWORD}`,
-    database:`${process.env.MYSQ_DATABASE}`
-});
 
-db.connect((err)=>{
-    if(err){
-        throw err;
-    }
-    console.log('mysql connected')
-})
+
+// insert Data
+const addToDB = (get) => {
+    //sql script
+    return `SELECT * FROM school WHERE delete_on IS NULL`;
+}
+
 
 
 const main = async () => {
     try {
 
-        app.get('/setupdb', async(req,res)=>{
+        app.get('/setupdb', async (req, res) => {
             let createDB = 'CREATE DATABASE schoolmngsys'
-            db.query(createDB, (err, result)=>{
-                if(err){
+            db.query(createDB, (err, result) => {
+                if (err) {
                     console.log(err)
                 }
             })
 
             let createtable = `CREATE TABLE school(
-                id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+                uuid INT VARCHAR(45) PRIMARY KEY NOT NULL,
                 code VARCHAR(45) UNIQUE NOT NULL,
                 create_on DATETIME NOT NULL,
                 updated_on DATETIME,
@@ -52,28 +50,8 @@ const main = async () => {
                 address VARCHAR(200) NOT NULL,
                 logo VARCHAR(200) NOT NULL)`;
 
-            db.query(createtable, (err, result)=>{
-                if(err){
-                    console.log(err)
-                }
-                res.send(result)
-            })
-        })
-
-        //add new school
-        app.post('/school', async(req,res)=>{
-            //uid
-            const today = new Date();
-            const uid = 'SID'+today.getFullYear()+''+(today.getMonth()+1)+''+today.getDate()+''+today.getHours() + "" + today.getMinutes() + "" + today.getSeconds();
-
-            //get data from client side
-            const clientData = req.body;
-            
-            //sql script
-            let sql = `INSERT INTO school (code, create_on, updated_on, name, about, phone, email, address, logo) VALUES ('${uid}', NOW(), NOW(), '${clientData.name}', '${clientData.about}', '${clientData.phone}', '${clientData.email}', '${clientData.address}', '${clientData.logo}')`;
-
-            db.query(sql, (err, result)=>{
-                if(err){
+            db.query(createtable, (err, result) => {
+                if (err) {
                     console.log(err)
                 }
                 res.send(result)
@@ -81,27 +59,23 @@ const main = async () => {
         })
 
         //get all schools
-        app.get('/school', async(req,res)=>{
-                        
-            //sql script
-            let sql = `SELECT * FROM school WHERE delete_on IS NULL`;
-
-            db.query(sql, (err, result)=>{
-                if(err){
-                    console.log(err)
-                }
-                res.send(result)
-            })
+        app.post('/school', async (req, res) => {
+            addNewData('school', ['code', 'create_on', 'updated_on', 'name', 'about', 'phone', 'email', 'address', 'logo'], req, res)
         })
 
         //get all schools
-        app.get('/getoneschool/:uid', async(req,res)=>{
-                        
+        app.get('/school', async (req, res) => {
+            getAllData('school',req,res);
+        })
+
+        //get all schools
+        app.get('/getoneschool/:uid', async (req, res) => {
+
             //sql script
             let sql = `SELECT * FROM school WHERE code = '${req.params.uid}'`;
 
-            db.query(sql, (err, result)=>{
-                if(err){
+            db.query(sql, (err, result) => {
+                if (err) {
                     console.log(err)
                 }
                 res.send(result)
@@ -109,46 +83,20 @@ const main = async () => {
         })
 
         //update school info
-        app.put('/school/:uid', async(req,res)=>{
-
-            //sql script
-            let sql = `UPDATE school SET name = '${req.body.name}', about = '${req.body.about}', phone = '${req.body.phone}', email = '${req.body.email}', address = '${req.body.address}', updated_on = NOW() WHERE code = '${req.params.uid}'`;
-
-            db.query(sql, (err, result)=>{
-                if(err){
-                    console.log(err)
-                }
-                res.send(result)
-            })
+        app.put('/school/:uid', async (req, res) => {
+            editData('school', req, res);
         })
 
         //fake delete school info
-        app.put('/deleteschool/:uid', async(req,res)=>{
-                        
-            //sql script
-            let sql = `UPDATE school SET delete_on = NOW() WHERE code = '${req.params.uid}'`;
-
-            db.query(sql, (err, result)=>{
-                if(err){
-                    console.log(err)
-                }
-                res.send(result)
-            })
+        app.put('/deleteschool/:uid', async (req, res) => {
+            deleteData('school', req, res);
         })
 
         //delete school
-        app.delete('/school/:uid', async(req,res)=>{
-
-            let sql = `DELETE FROM school WHERE code = '${req.params.uid}'`;
-
-            db.query(sql, (err, result)=>{
-                if(err){
-                    console.log(err)
-                }
-                res.send(result)
-            })
+        app.delete('/school/:uid', async (req, res) => {
+            pureDelete('school', req, res)
         })
-        
+
     }
 
     finally {

@@ -11,6 +11,12 @@ const EditSchool = () => {
 
     const { register, handleSubmit, watch, formState: { errors }, reset} = useForm();
     const onSubmit = data =>{
+
+        for (var key in data) {
+            if (data[key] === "")
+            delete data[key];
+        }
+
         axios.put(`http://localhost:5000/school/${schoolid}`, data)
                 .then(res => {
                     console.log(res.data)
