@@ -24,7 +24,7 @@ const NewSchool = () => {
     const addNewSchool = (data) => {
         axios.post('http://localhost:5000/school', data).then(res => {
             console.log(res.data)
-            if(res.data.insertId > 0){
+            if(res.data.affectedRows > 0){
                 Swal.fire(
                     'Success',
                     'School Information Added successfully',
