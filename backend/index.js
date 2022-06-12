@@ -1,9 +1,10 @@
 import express from 'express';
-import { db } from './dbservice.js';
-import { addNewData } from './CrudProcess/addData.js';
-import { getAllData } from './CrudProcess/getAllData.js';
-import { editData } from './CrudProcess/editData.js';
-import { deleteData } from './CrudProcess/deleteData.js';
+import db from './dbservice.js';
+import { v4 as uuidv4 } from 'uuid';
+import addNewData from './CrudProcess/addData.js';
+import getAllData from './CrudProcess/getAllData.js';
+import editData from './CrudProcess/editData.js';
+import deleteData from './CrudProcess/deleteData.js';
 
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -38,7 +39,7 @@ const main = async () => {
             })
 
             let createtable = `CREATE TABLE school(
-                uuid INT VARCHAR(45) PRIMARY KEY NOT NULL,
+                uuid VARCHAR(45) PRIMARY KEY NOT NULL,
                 code VARCHAR(45) UNIQUE NOT NULL,
                 create_on DATETIME NOT NULL,
                 updated_on DATETIME,
@@ -60,12 +61,29 @@ const main = async () => {
 
         //get all schools
         app.post('/school', async (req, res) => {
-            addNewData('school', ['code', 'create_on', 'updated_on', 'name', 'about', 'phone', 'email', 'address', 'logo'], req, res)
+
+            const today = new Date();
+            const code = 'SID' + today.getFullYear() + '' + (today.getMonth() + 1) + '' + today.getDate() + '' + today.getHours() + "" + today.getMinutes() + "" + today.getSeconds();
+
+            const userData = {
+                uuid: uuidv4(),
+                code: code,
+                create_on: new Date().toISOString().slice(0, 19).replace('T', ' '),
+                updated_on: new Date().toISOString().slice(0, 19).replace('T', ' '),
+                name: req.body.name,
+                about: req.body.about,
+                phone: req.body.phone,
+                email: req.body.email,
+                address: req.body.address,
+                logo: req.body.logo
+            }
+            
+            addNewData('school', userData, res)
         })
 
         //get all schools
         app.get('/school', async (req, res) => {
-            getAllData('school',req,res);
+            getAllData('school', req, res);
         })
 
         //get all schools

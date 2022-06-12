@@ -1,4 +1,4 @@
-import { playdb } from '../resdbquery.js';
+import playdb from '../resdbquery.js';
 
 const getAllData = (tableName='', req, res) => {
     let sql = `SELECT * FROM ${tableName} WHERE delete_on IS NULL`;
@@ -6,4 +6,4 @@ const getAllData = (tableName='', req, res) => {
 }
 
 
-export {getAllData};
+export default getAllData;

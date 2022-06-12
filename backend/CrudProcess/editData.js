@@ -1,4 +1,4 @@
-import { playdb } from '../resdbquery.js';
+import playdb from '../resdbquery.js';
 
 const editData = (tableName='', req, res) => {
     let updateData = '';
@@ -14,4 +14,4 @@ const editData = (tableName='', req, res) => {
 }
 
 
-export {editData};
+export default editData;

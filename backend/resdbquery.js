@@ -1,4 +1,4 @@
-import {db} from './dbservice.js';
+import db from './dbservice.js';
 const playdb = (sql='',res)=>{
     db.query(sql, (err, result) => {
         if (err) {
@@ -7,4 +7,4 @@ const playdb = (sql='',res)=>{
         res.send(result)
     })
 }
-export {playdb};
+export default playdb;

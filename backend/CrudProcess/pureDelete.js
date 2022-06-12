@@ -1,4 +1,4 @@
-import { playdb } from '../resdbquery.js';
+import playdb from '../resdbquery.js';
 
 const pureDelete = (tableName='', req, res) => {
 
@@ -7,4 +7,4 @@ const pureDelete = (tableName='', req, res) => {
 
 }
 
-export { pureDelete };
+export default pureDelete;

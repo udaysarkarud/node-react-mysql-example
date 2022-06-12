@@ -1,4 +1,4 @@
-import { playdb } from '../resdbquery.js';
+import playdb from '../resdbquery.js';
 
 const deleteData = (tableName='', req, res) => {
 
@@ -8,4 +8,4 @@ const deleteData = (tableName='', req, res) => {
 }
 
 
-export { deleteData };
+export default deleteData;
